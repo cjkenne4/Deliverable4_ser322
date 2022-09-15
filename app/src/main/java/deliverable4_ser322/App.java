@@ -47,12 +47,13 @@ public class App extends Application
         Athlete nAthlete  = null;
         try
         {
-            
+            String id = rs.getString("athleteID");
+            String name = rs.getString("name");
             String email = rs.getString("email");
-            String firstName = rs.getString("firstName");
-            String lastName = rs.getString("lastName");
+            String skill = rs.getString("skill");
+            String orgID = rs.getString("organizationID");
 
-            nAthlete = new Athlete(firstName, lastName, email);
+            nAthlete = new Athlete(id, name, email, skill, orgID);
 
         }
         catch (SQLException e)
@@ -71,7 +72,7 @@ public class App extends Application
 
     private static void testDatabaseConnection(){
 
-        String url = "jdbc:mysql://ser322.mysql.database.azure.com:3306/sample_schema?useSSL=true";
+        String url = "jdbc:mysql://ser322.mysql.database.azure.com:3306/league?useSSL=true";
         String username = "group_admin";
         String password = "1goodPassword";
 

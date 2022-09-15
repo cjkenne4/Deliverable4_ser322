@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 
 public class GenericRM<T> {
 
-    static final String url = "jdbc:mysql://ser322.mysql.database.azure.com:3306/sample_schema?useSSL=true";
+    static final String url = "jdbc:mysql://ser322.mysql.database.azure.com:3306/league?useSSL=true";
     static final String username = "group_admin";
     static final String password = "1goodPassword";
     static volatile Connection conn;

@@ -52,7 +52,7 @@
     -fx-stroke: -fx-text-fill;
         stroke: -fx-text-fill;
 }
-
+/*Custom buttons*/
 #green {
     -fx-background-color:
         linear-gradient(#f0ff35, #a9ff00),
@@ -79,6 +79,44 @@
     -fx-background-insets: 1, 2;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
     -fx-text-fill: #395306;
+}
+#blue {
+    -fx-background-color:
+        linear-gradient(#3574cc, #0077ff),
+        radial-gradient(center 50% -40%, radius 200%, #89baff 45%, #1971ed 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: #000000;
+}
+#blue:hover {
+    -fx-background-color:
+        linear-gradient(#35a4ff, #006eff),
+        radial-gradient(center 50% -40%, radius 200%, #3589ff 45%, #3589ff 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: #010a0a;
+}
+#blue:pressed {
+    -fx-background-color:
+        linear-gradient(#003cff, #001eff),
+        radial-gradient(center 50% -40%, radius 150%, #3589ff 45%, #3589ff 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 1, 2;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: #000000;
+}
+
+#bluebg {
+    -fx-background-color:
+        #dddee7,
+        #383b52,
+        linear-gradient(#92a9fa, #b2c2fb),
+        linear-gradient(#6e8dfd, #92a9fa);
+    -fx-background-insets:
+        0 0 -1 0, 0, 1, 2;
+
 }
 
 /* TableView */

@@ -1,5 +1,11 @@
 package deliverable4_ser322;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.NoSuchElementException;
+
+import javax.lang.model.util.ElementScanner14;
+
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
@@ -25,7 +31,7 @@ public class Table<T> extends TableView {
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         TextField textField = new TextField();
-        FilteredList flAthlete = new FilteredList<>(data, p -> true);
+        FilteredList<T> flAthlete = new FilteredList<>(data, p -> true);
 
         table.setItems(flAthlete);
         addColumns(table, tableType);
@@ -43,25 +49,26 @@ public class Table<T> extends TableView {
         vbox.getChildren().addAll(label, table, hBox);
     }
 
-    private void createSearchBar(TextField textField, ChoiceBox<String> choiceBox, FilteredList<Athlete> flAthlete, TableType tType){
+    private void createSearchBar(TextField textField, ChoiceBox<String> choiceBox, FilteredList<T> flAthlete, TableType tType){
 
         choiceBox.getItems().addAll(tType.colNames());
         choiceBox.setValue(tType.colNames().get(0));
         textField.setPromptText("Search...");
         textField.textProperty().addListener((obs, oldValue, newValue) -> {
+            String cbv = choiceBox.getValue();
+            String methodName = "get" + cbv.substring(0,1).toUpperCase() + cbv.substring(1);
 
-            switch (choiceBox.getValue())
-            {
-                case "firstName":
-                    flAthlete.setPredicate(p -> p.getFirstName().toLowerCase().contains(newValue.toLowerCase().trim()));
-                    break;
-                case "lastName":
-                    flAthlete.setPredicate(p -> p.getLastName().toLowerCase().contains(newValue.toLowerCase().trim()));
-                    break;
-                case "email":
-                    flAthlete.setPredicate(p -> p.getEmail().toLowerCase().contains(newValue.toLowerCase().trim()));
-                    break;
-            }
+            flAthlete.setPredicate(p -> {
+                try {
+                    Method method = tType.objClass().getMethod(methodName);
+                    if(method.invoke(p).getClass().equals(String.class));
+                        return (method.invoke(p).toString()).toLowerCase().contains(newValue.toLowerCase().trim());
+                    
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
         });
     
         choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)
@@ -71,12 +78,14 @@ public class Table<T> extends TableView {
             }
         });
     }
+
     private void addColumns(TableView<T> tableView, TableType tType){
-        
+
         for(String str: tType.colNames()){
             tableView.getColumns().add(setColumn(str, str, 100));
         }
     }
+
     private TableColumn<T, String> setColumn(String colName, String colValue, int minWidth){
 
         TableColumn<T, String> tableColumn = new TableColumn<>(colName);
