@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 public class App extends Application
 {
     VBox vbox = new VBox();
+    TabView tabs = new TabView();
 
     static{ 
         testDatabaseConnection();
@@ -24,50 +25,51 @@ public class App extends Application
     @Override
     public void start(Stage stage) throws SQLException
     {
-        ObservableList<Athlete> data = getAllFromTable("athlete");
-        Table<Athlete> table = new Table(data, "Statistics", vbox,TableType.ATHLETE);
-
         Scene scene = new Scene(new Group());
         scene.getStylesheets().add("ContextMenu.css");
 
         stage.setTitle("Table View Sample");
         stage.setWidth(550);
         stage.setHeight(550);
-        
+
+        ObservableList<Object> athleteData = getAllFromTable("athlete", TableType.ATHLETE);
+        ObservableList<Object> compData = getAllFromTable("competition", TableType.COMPETITION);
+        ObservableList<Object> orgData = getAllFromTable("organization", TableType.ORGANIZATION);
+        ObservableList<Object> sponsorData = getAllFromTable("sponsor", TableType.SPONSOR);
+        ObservableList<Object> compSponsorData = getAllFromTable("competitions_sponsored", TableType.COMPETITIONS_SPONSORED);
+        ObservableList<Object> athStatData = getAllFromTable("athlete_stats", TableType.ATHLETE_STATS);
+        tabs.addTableTab("Athlete", athleteData, TableType.ATHLETE, stage);
+        tabs.addTableTab("Competition", compData, TableType.COMPETITION, stage);
+        tabs.addTableTab("Organization", orgData, TableType.ORGANIZATION, stage);
+        tabs.addTableTab("Sponsor", sponsorData, TableType.SPONSOR, stage);
+        tabs.addTableTab("Competitions_Sponsored", compSponsorData, TableType.COMPETITIONS_SPONSORED, stage);
+        tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, stage);
+
+        vbox.getChildren().add(tabs.createContent());
         vbox.prefWidthProperty().bind(stage.widthProperty().multiply(0.96));
         vbox.autosize();
-
-        ((Group) scene.getRoot()).getChildren().addAll(vbox);
+        
+        ((Group) scene.getRoot()).getChildren().add(vbox);
         stage.setScene(scene);
         stage.show();
     }
 
-    public static Athlete mapFromResultSet(ResultSet rs)
-    {
-        Athlete nAthlete  = null;
-        try
-        {
-            String id = rs.getString("athleteID");
-            String name = rs.getString("name");
-            String email = rs.getString("email");
-            String skill = rs.getString("skill");
-            String orgID = rs.getString("organizationID");
-
-            nAthlete = new Athlete(id, name, email, skill, orgID);
-
+    public static Object mapFromResultSet(ResultSet rs, TableType tType)
+    {   
+        Object nObj = null;
+        try {
+            nObj = tType.newDbObject(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return nAthlete;
+        return nObj;
     }
 
-    public static ObservableList<Athlete> getAllFromTable(String tableName) throws SQLException
+    public static ObservableList<Object> getAllFromTable(String tableName, TableType tType) throws SQLException
     {
         String Query = "select * " + "from " + tableName;
 
-        return GenericRM.getAttributesFromQuery(Query, rs -> mapFromResultSet(rs));
+        return GenericRM.getAttributesFromQuery(Query, rs -> mapFromResultSet(rs, tType));
     }
 
     private static void testDatabaseConnection(){

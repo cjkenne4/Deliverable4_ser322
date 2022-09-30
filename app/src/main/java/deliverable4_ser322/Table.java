@@ -31,9 +31,9 @@ public class Table<T> extends TableView {
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         TextField textField = new TextField();
-        FilteredList<T> flAthlete = new FilteredList<>(data, p -> true);
+        FilteredList<T> fl = new FilteredList<>(data, p -> true);
 
-        table.setItems(flAthlete);
+        table.setItems(fl);
         addColumns(table, tableType);
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -41,7 +41,7 @@ public class Table<T> extends TableView {
         table.prefHeightProperty().bind(vbox.heightProperty().multiply(0.86));
         table.setEditable(true);
         
-        createSearchBar(textField, choiceBox, flAthlete, tableType);
+        createSearchBar(textField, choiceBox, fl, tableType);
         HBox hBox = new HBox(choiceBox, textField);
         hBox.setAlignment(Pos.CENTER);
         vbox.setSpacing(5);
@@ -49,7 +49,7 @@ public class Table<T> extends TableView {
         vbox.getChildren().addAll(label, table, hBox);
     }
 
-    private void createSearchBar(TextField textField, ChoiceBox<String> choiceBox, FilteredList<T> flAthlete, TableType tType){
+    private void createSearchBar(TextField textField, ChoiceBox<String> choiceBox, FilteredList<T> fl, TableType tType){
 
         choiceBox.getItems().addAll(tType.colNames());
         choiceBox.setValue(tType.colNames().get(0));
@@ -58,11 +58,11 @@ public class Table<T> extends TableView {
             String cbv = choiceBox.getValue();
             String methodName = "get" + cbv.substring(0,1).toUpperCase() + cbv.substring(1);
 
-            flAthlete.setPredicate(p -> {
+            fl.setPredicate(p -> {
                 try {
                     Method method = tType.objClass().getMethod(methodName);
-                    if(method.invoke(p).getClass().equals(String.class));
-                        return (method.invoke(p).toString()).toLowerCase().contains(newValue.toLowerCase().trim());
+                    //if(method.invoke(p).getClass().equals(String.class));
+                    return (method.invoke(p).toString()).toLowerCase().contains(newValue.toLowerCase().trim());
                     
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
                     e.printStackTrace();
