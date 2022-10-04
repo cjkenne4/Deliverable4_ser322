@@ -67,7 +67,9 @@ public enum TableType {
         }
         @Override
         public Competition insertRow(Object[] values) {
-            return new Competition(values);
+            Competition nComp = new Competition();
+            setRowObject(nComp, values);
+            return nComp;
         }
     },
     SPONSOR(new ArrayList<>(Arrays.asList("SponsorID", "Email", "Name")), Sponsor.class)
@@ -93,7 +95,9 @@ public enum TableType {
         }
         @Override
         public Sponsor insertRow(Object[] values) {
-            return new Sponsor(values);
+            Sponsor nSponsor = new Sponsor();
+            setRowObject(nSponsor, values);
+            return nSponsor;
         }
     },
     ORGANIZATION(new ArrayList<>(Arrays.asList("organizationID", "name", "email", "type")), Organization.class)
@@ -119,7 +123,9 @@ public enum TableType {
         }
         @Override
         public Organization insertRow(Object[] values) {
-            return new Organization(values);
+            Organization nOrg = new Organization();
+            setRowObject(nOrg, values);
+            return nOrg;
         }
     },
     COMPETITIONS_SPONSORED(new ArrayList<>(Arrays.asList("competitionID", "sponsorID", "prize")), CompetitionSponsor.class)
@@ -144,7 +150,9 @@ public enum TableType {
         }
         @Override
         public CompetitionSponsor insertRow(Object[] values) {
-            return new CompetitionSponsor(values);
+            CompetitionSponsor nCompSponsor = new CompetitionSponsor();
+            setRowObject(nCompSponsor, values);
+            return nCompSponsor;
         }
         
     },
@@ -171,7 +179,9 @@ public enum TableType {
         }
         @Override
         public AthleteStats insertRow(Object[] values) {
-            return new AthleteStats(values);
+            AthleteStats nAthStat = new AthleteStats();
+            setRowObject(nAthStat, values);
+            return nAthStat;
         } 
     };
 
