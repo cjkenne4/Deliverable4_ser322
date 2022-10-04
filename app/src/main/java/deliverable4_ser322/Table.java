@@ -2,30 +2,34 @@ package deliverable4_ser322;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.NoSuchElementException;
 
-import javax.lang.model.util.ElementScanner14;
-
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 public class Table<T> extends TableView {
 
     private TableView<T> table = new TableView<>();
 
     public Table(ObservableList<T> data, String tableName, VBox vbox, TableType tableType){
-
+        
         final Label label = new Label(tableName);
         label.setFont(new Font("Arial", 16));
 
@@ -42,6 +46,7 @@ public class Table<T> extends TableView {
         table.setEditable(true);
         
         createSearchBar(textField, choiceBox, fl, tableType);
+        createContextMenu(table, tableType);
         HBox hBox = new HBox(choiceBox, textField);
         hBox.setAlignment(Pos.CENTER);
         vbox.setSpacing(5);
@@ -94,4 +99,54 @@ public class Table<T> extends TableView {
             
         return tableColumn;
     } 
+
+    public void createContextMenu(TableView<T> table, TableType tType){
+        table.setRowFactory(new Callback<TableView<T>, TableRow<T>>() 
+        {
+            @Override
+            public TableRow<T> call(TableView<T> tableView) 
+            {
+                final TableRow<T> row = new TableRow<>();
+                final ContextMenu rowMenu = new ContextMenu();
+                MenuItem update = new MenuItem("Update");
+                update.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        //Object selectedRow = row.getItem();
+                        T selectedRow = tType.getRowObject(row.getItem());
+                        CrudDialog.displayUpdate(tType, selectedRow);
+                        table.refresh();
+                    }
+                    
+                });
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(new EventHandler<ActionEvent>() 
+                {
+                    @Override
+                    public void handle(ActionEvent event) 
+                    {
+                        T selectedRow = tType.getRowObject(row.getItem());
+                        CrudDialog.displayDelete(selectedRow, tType, table);
+                    }
+                });
+                MenuItem insert = new MenuItem("Insert");
+                insert.setOnAction(new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        
+                    }
+                });
+                rowMenu.getItems().addAll(update, delete);
+            
+                // only display context menu for non-empty rows:
+                row.contextMenuProperty().bind(
+                Bindings.when(row.emptyProperty())
+                .then((ContextMenu) null)
+                .otherwise(rowMenu));
+                return row;
+            }
+        });
+    }
 }

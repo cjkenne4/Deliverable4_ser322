@@ -7,7 +7,6 @@ public class Athlete {
     private final SimpleIntegerProperty athleteID = new SimpleIntegerProperty();
     private final SimpleStringProperty name = new SimpleStringProperty();
     private final SimpleStringProperty email = new SimpleStringProperty();
-    private final SimpleIntegerProperty  skill = new SimpleIntegerProperty();
     private final SimpleIntegerProperty organizationID = new SimpleIntegerProperty();
 
     public Athlete(int athleteID, String name, String email, int skill, int organizationID)
@@ -15,7 +14,6 @@ public class Athlete {
             this.athleteID.setValue(athleteID);
             this.name.setValue(name);
             this.email.setValue(email);
-            this.skill.setValue(skill);
             this.organizationID.setValue(organizationID);
         }
     public Athlete(Object... args)
@@ -23,8 +21,7 @@ public class Athlete {
             setAthleteID((int) args[0]);
             setName((String) args[1]);
             setEmail((String) args[2]);
-            setSkill((int) args[3]);
-            setOrganizationID((int) args[4]);
+            setOrganizationID((int) args[3]);
         }
     public String getName()
     {
@@ -70,19 +67,7 @@ public class Athlete {
     {
         return email;
     }
-        
-    public int getSkill()
-    {
-        return skill.get();
-    }
-    public void setSkill(int pSkill)
-    {   
-        skill.set(pSkill);
-    }
-    public SimpleIntegerProperty getSkillProperty()
-    {
-        return skill;
-    }
+    
     public int getOrganizationID()
     {
         return organizationID.get();
