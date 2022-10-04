@@ -24,6 +24,8 @@ public class Organization {
         setEmail((String) args[2]);
         setType((String) args[3]);
     }
+    public Organization(){};
+    
     public int getOrganizationID()
     {
         return organizationID.get();

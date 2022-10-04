@@ -21,6 +21,8 @@ public class CompetitionSponsor {
         setSponsorID((int) args[1]);
         setPrize((String) args[2]);
     }
+    public CompetitionSponsor(){};
+    
     public int getCompetitionID()
     {
         return competitionID.get();

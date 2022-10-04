@@ -37,6 +37,12 @@ public enum TableType {
             ((Athlete) row).setEmail((String) values[2]);
             ((Athlete) row).setOrganizationID(Integer.valueOf((String) values[3]));
         }
+        @Override
+        public Athlete insertRow(Object[] values) {
+            Athlete nAthlete = new Athlete();
+            setRowObject(nAthlete, values);
+            return nAthlete;
+        }
     },
     COMPETITION(new ArrayList<>(Arrays.asList("competitionID", "category","datetime")), Competition.class)
     {
@@ -58,6 +64,10 @@ public enum TableType {
             ((Competition) row).setCompetitionID(Integer.valueOf((String) values[0]));
             ((Competition) row).setCategory((String) values[1]);
             ((Competition) row).setDatetime(LocalDateTime.parse((String) values[2]));
+        }
+        @Override
+        public Competition insertRow(Object[] values) {
+            return new Competition(values);
         }
     },
     SPONSOR(new ArrayList<>(Arrays.asList("SponsorID", "Email", "Name")), Sponsor.class)
@@ -81,6 +91,10 @@ public enum TableType {
             ((Sponsor) row).setName((String) values[1]);
             ((Sponsor) row).setEmail((String) values[2]);
         }
+        @Override
+        public Sponsor insertRow(Object[] values) {
+            return new Sponsor(values);
+        }
     },
     ORGANIZATION(new ArrayList<>(Arrays.asList("organizationID", "name", "email", "type")), Organization.class)
     {
@@ -103,6 +117,10 @@ public enum TableType {
             ((Organization) row).setEmail((String) values[2]);
             ((Organization) row).setType((String) values[3]);
         }
+        @Override
+        public Organization insertRow(Object[] values) {
+            return new Organization(values);
+        }
     },
     COMPETITIONS_SPONSORED(new ArrayList<>(Arrays.asList("competitionID", "sponsorID", "prize")), CompetitionSponsor.class)
     {
@@ -123,6 +141,10 @@ public enum TableType {
             ((CompetitionSponsor) row).setCompetitionID(Integer.valueOf((String) values[0]));
             ((CompetitionSponsor) row).setSponsorID(Integer.valueOf((String) values[1]));
             ((CompetitionSponsor) row).setPrize((String) values[2]);
+        }
+        @Override
+        public CompetitionSponsor insertRow(Object[] values) {
+            return new CompetitionSponsor(values);
         }
         
     },
@@ -146,6 +168,10 @@ public enum TableType {
             ((AthleteStats) row).setCompetitionID(Integer.valueOf((String) values[1]));
             ((AthleteStats) row).setWinningStatistics((String) values[2]);
             ((AthleteStats) row).setPlacement(Integer.valueOf((String) values[3]));
+        }
+        @Override
+        public AthleteStats insertRow(Object[] values) {
+            return new AthleteStats(values);
         } 
     };
 
@@ -181,8 +207,9 @@ public enum TableType {
         }
         return values;
     }
-
+    
     public abstract <T> T newDbObject(ResultSet rs) throws SQLException;
     public abstract <T> T getRowObject(Object row);
     public abstract void setRowObject(Object row, Object[] values);
+    public abstract <T> T insertRow(Object[] values);
 }

@@ -2,6 +2,7 @@ package deliverable4_ser322;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
@@ -27,9 +28,11 @@ import javafx.util.Callback;
 public class Table<T> extends TableView {
 
     private TableView<T> table = new TableView<>();
+    private ObservableList<T> data;
 
     public Table(ObservableList<T> data, String tableName, VBox vbox, TableType tableType){
-        
+
+        this.data = data;
         final Label label = new Label(tableName);
         label.setFont(new Font("Arial", 16));
 
@@ -126,7 +129,11 @@ public class Table<T> extends TableView {
                     public void handle(ActionEvent event) 
                     {
                         T selectedRow = tType.getRowObject(row.getItem());
-                        CrudDialog.displayDelete(selectedRow, tType, table);
+                        try {
+                            CrudDialog.displayDelete(selectedRow, tType, data, row.getItem());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 MenuItem insert = new MenuItem("Insert");
@@ -135,10 +142,10 @@ public class Table<T> extends TableView {
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        
+                        CrudDialog.displayInsert(tType, data);
                     }
                 });
-                rowMenu.getItems().addAll(update, delete);
+                rowMenu.getItems().addAll(update, insert, delete);
             
                 // only display context menu for non-empty rows:
                 row.contextMenuProperty().bind(

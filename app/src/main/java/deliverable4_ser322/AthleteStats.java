@@ -24,6 +24,8 @@ public class AthleteStats {
         setWinningStatistics((String) args[2]);
         setPlacement((int) args[3]);
     }
+    public AthleteStats(){};
+    
     public int getAthleteID()
     {
         return athleteID.get();

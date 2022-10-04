@@ -21,6 +21,8 @@ public class Sponsor {
         setName((String) args[1]);
         setEmail((String) args[2]);
     }
+    public Sponsor(){};
+    
     public int getSponsorID()
     {
         return sponsorID.get();

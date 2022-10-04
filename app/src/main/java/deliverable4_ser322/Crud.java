@@ -16,12 +16,38 @@ public class Crud {
     {
         conn = getConnection();
         int n = tType.colNames().size();
-        pstmt = conn.prepareStatement("UPDATE " + tType.toString() + " SET " + catCol(tType) + " WHERE " + tType.colNames().get(0) + " = ?");
+        pstmt = conn.prepareStatement("UPDATE " + tType.toString() + " SET " + catColUpdate(tType) + " WHERE " + tType.colNames().get(0) + " = ?");
         for(int i = 0; i < n; i++){
             pstmt.setString(i+1, results[i].toString());
         }
         pstmt.setString(n+1, Integer.toString(id));
         pstmt.executeUpdate();
+    }
+    public static void insert(Object[] results, TableType tType) throws SQLException
+    {
+        conn = getConnection();
+        int n = tType.colNames().size();
+        String str = "";
+        pstmt = conn.prepareStatement("INSERT INTO " + tType.toString() + " (" + catColNames(tType) + ") VALUES (" + catColQ(tType) + ")");
+        for(int i = 0; i < n; i++) {
+            pstmt.setString(i+1, results[i].toString());
+        }
+        pstmt.executeUpdate();
+    }
+    public static void delete(TableType tType, int id) throws SQLException
+    {
+        conn = getConnection();
+        pstmt = conn.prepareStatement("DELETE FROM " + tType.toString() + " WHERE " + tType.colNames().get(0) + " = ?");
+        pstmt.setInt(1, id);
+        pstmt.executeUpdate();
+    }
+    public static ResultSet getRow(TableType tType, int id) throws SQLException
+    {
+        conn = getConnection();
+        pstmt = conn.prepareStatement("SELECT * FROM " + tType.toString() + " WHERE " + tType.colNames().get(0) + " = ?");
+        pstmt.setInt(1, id);
+        rs = pstmt.executeQuery();
+        return rs;
     }
     private static Connection getConnection() throws SQLException 
     {
@@ -34,13 +60,29 @@ public class Crud {
         Connection connection = DriverManager.getConnection(url, username, password);
         return connection;
     }
-    private static String catCol(TableType tType)
+    private static String catColUpdate(TableType tType)
     {
         String str = tType.colNames().get(0);
         for(int i = 1; i < tType.colNames().size(); i++){
             str += " = ?, " + tType.colNames().get(i);
         }
         str += " = ?";
+        return str;
+    }
+    private static String catColNames(TableType tType)
+    {
+        String str = tType.colNames().get(0);
+        for(int i = 1; i < tType.colNames().size(); i++){
+            str += ", " + tType.colNames().get(i);
+        }
+        return str;
+    }
+    private static String catColQ(TableType tType)
+    {
+        String str = "?";
+        for(int i = 1; i < tType.colNames().size(); i++){
+            str += ", ?";
+        }
         return str;
     }
 }

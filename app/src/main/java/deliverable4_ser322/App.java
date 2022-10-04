@@ -17,7 +17,8 @@ public class App extends Application
 {
     VBox vbox = new VBox();
     TabView tabs = new TabView();
-
+    static Stage stage;
+    
     static{ 
         testDatabaseConnection();
     }
@@ -25,6 +26,7 @@ public class App extends Application
     @Override
     public void start(Stage stage) throws SQLException
     {
+        App.stage = stage;
         Scene scene = new Scene(new Group());
         scene.getStylesheets().add("ContextMenu.css");
 
