@@ -70,7 +70,11 @@ public class Table<T> extends TableView {
                 try {
                     Method method = tType.objClass().getMethod(methodName);
                     //if(method.invoke(p).getClass().equals(String.class));
-                    return (method.invoke(p).toString()).toLowerCase().contains(newValue.toLowerCase().trim());
+                    if(newValue.length() > 0 && newValue.substring(0,1).equals("=")){
+                        return (method.invoke(p).toString()).toLowerCase().equals(newValue.substring(1).toLowerCase().trim());
+                    }
+                    else
+                        return (method.invoke(p).toString()).toLowerCase().contains(newValue.toLowerCase().trim());
                     
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
                     e.printStackTrace();

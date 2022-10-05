@@ -36,6 +36,23 @@ public class GenericRM<T> {
 
         return data;
     }
+    public static Object mapFromResultSet(ResultSet rs, TableType tType)
+    {   
+        Object nObj = null;
+        try {
+            nObj = tType.newDbObject(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nObj;
+    }
+
+    public static ObservableList<Object> getAllFromTable(String tableName, TableType tType) throws SQLException
+    {
+        String Query = "select * " + "from " + tableName;
+
+        return getAttributesFromQuery(Query, rs -> mapFromResultSet(rs, tType));
+    }
     static Connection connectToDB(String url, String username, String password) throws SQLException{
         Connection connection = DriverManager.getConnection(url, username, password);
         return connection;

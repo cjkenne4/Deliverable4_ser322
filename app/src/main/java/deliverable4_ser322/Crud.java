@@ -22,6 +22,7 @@ public class Crud {
         }
         pstmt.setString(n+1, Integer.toString(id));
         pstmt.executeUpdate();
+        close();
     }
     public static void insert(Object[] results, TableType tType) throws SQLException
     {
@@ -33,6 +34,7 @@ public class Crud {
             pstmt.setString(i+1, results[i].toString());
         }
         pstmt.executeUpdate();
+        close();
     }
     public static void delete(TableType tType, int id) throws SQLException
     {
@@ -40,6 +42,7 @@ public class Crud {
         pstmt = conn.prepareStatement("DELETE FROM " + tType.toString() + " WHERE " + tType.colNames().get(0) + " = ?");
         pstmt.setInt(1, id);
         pstmt.executeUpdate();
+        close();
     }
     public static ResultSet getRow(TableType tType, int id) throws SQLException
     {
@@ -47,6 +50,7 @@ public class Crud {
         pstmt = conn.prepareStatement("SELECT * FROM " + tType.toString() + " WHERE " + tType.colNames().get(0) + " = ?");
         pstmt.setInt(1, id);
         rs = pstmt.executeQuery();
+        close();
         return rs;
     }
     private static Connection getConnection() throws SQLException 
@@ -59,6 +63,12 @@ public class Crud {
 
         Connection connection = DriverManager.getConnection(url, username, password);
         return connection;
+    }
+    private static void close() throws SQLException
+    {
+        if(conn != null) conn.close();
+        if(pstmt != null) pstmt.close();
+        if(rs != null) rs.close();
     }
     private static String catColUpdate(TableType tType)
     {

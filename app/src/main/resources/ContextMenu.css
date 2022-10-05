@@ -1,6 +1,7 @@
 /*.root {
     -fx-background-color: cornsilk; 
     -fx-padding: 10;
+    -fx-text-fill: #000000;
   }
   
   .context-menu {
@@ -107,7 +108,7 @@
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
     -fx-text-fill: #000000;
 }
-
+/*background color*/
 #bluebg {
     -fx-background-color:
         #dddee7,
@@ -123,6 +124,7 @@
 .table-view {
     -fx-background-color: transparent;
         background-color: transparent;
+    -fx-text-fill: #000000;
 }
 .table-view .column-header-background {
     -fx-background-color: linear-gradient(to bottom, #1dbbdd44, #93f9b944);
@@ -164,6 +166,14 @@
         background-color: #93f9b911;
     -fx-text-background-color: rgb(0, 132, 255);
 }
+/*.table-row-cell:selected {
+    -fx-background-color: steelblue; 
+        background-color: steelblue;
+ }*/
+ .table-row-cell:selected .text {
+        -fx-fill: rgba(2, 116, 222, 0.902);
+            fill:rgba(2, 116, 222, 0.902);
+ }
 .table-row-cell:odd {
     -fx-background-color: #93f9b911;
         background-color: #93f9b911;

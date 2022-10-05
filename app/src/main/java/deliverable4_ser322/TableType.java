@@ -72,7 +72,7 @@ public enum TableType {
             return nComp;
         }
     },
-    SPONSOR(new ArrayList<>(Arrays.asList("SponsorID", "Email", "Name")), Sponsor.class)
+    SPONSOR(new ArrayList<>(Arrays.asList("sponsorID", "name", "email")), Sponsor.class)
     {
         @Override
         public Object newDbObject(ResultSet rs) throws SQLException 
@@ -217,7 +217,17 @@ public enum TableType {
         }
         return values;
     }
-    
+    public Object instantiate(ResultSet rs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, SQLException {
+        Object[] args = getArgs(rs);
+        Class<?> clazz = objClass();
+        return clazz.getDeclaredConstructor().newInstance(args);
+    }
+    public Object[] getArgs(ResultSet rs) throws SQLException{
+        Object[] args = new Object[colNames().size()];
+        for(int i = 0; i < args.length; i++)
+            args[i] = rs.getObject(colNames().get(i));
+        return args;
+    }
     public abstract <T> T newDbObject(ResultSet rs) throws SQLException;
     public abstract <T> T getRowObject(Object row);
     public abstract void setRowObject(Object row, Object[] values);

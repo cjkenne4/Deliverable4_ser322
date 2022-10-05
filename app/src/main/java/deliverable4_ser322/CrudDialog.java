@@ -1,6 +1,5 @@
 package deliverable4_ser322;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
@@ -26,7 +24,8 @@ public class CrudDialog {
         Object[] currentVals = tType.getValues(selectedRow);
         int id = (int) currentVals[0];
         String txt = "";
-        for(Object o : currentVals) txt += o.toString() + "\n";
+        int i = 0;
+        for(Object o : currentVals) txt += tType.colNames().get(i++) + ": " + o.toString() + "\n";
         alert.setHeaderText("Are you sure you want to delete this row?");
         alert.setContentText(txt);
 
