@@ -1,4 +1,4 @@
-package deliverable4_ser322;
+package deliverable4_ser322.table;
 
 import java.time.LocalDateTime;
 

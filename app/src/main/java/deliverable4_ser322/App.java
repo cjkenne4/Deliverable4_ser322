@@ -18,6 +18,7 @@ public class App extends Application
     VBox vbox = new VBox();
     static TabView tabs = new TabView();
     static Stage stage;
+    static Queries qbox = new Queries();
 
     static{ 
         testDatabaseConnection();
@@ -31,10 +32,12 @@ public class App extends Application
         scene.getStylesheets().add("ContextMenu.css");
 
         stage.setTitle("Table View Sample");
-        stage.setWidth(550);
-        stage.setHeight(550);
+        stage.setWidth(700);
+        stage.setHeight(750);
+
+        qbox.addQueries();
        
-        ObservableList<Object> athleteData = GenericRM.getAllFromTable("athlete", TableType.ATHLETE);
+        /*ObservableList<Object> athleteData = GenericRM.getAllFromTable("athlete", TableType.ATHLETE);
         ObservableList<Object> compData = GenericRM.getAllFromTable("competition", TableType.COMPETITION);
         ObservableList<Object> orgData = GenericRM.getAllFromTable("organization", TableType.ORGANIZATION);
         ObservableList<Object> sponsorData = GenericRM.getAllFromTable("sponsor", TableType.SPONSOR);
@@ -45,9 +48,10 @@ public class App extends Application
         tabs.addTableTab("Organization", orgData, TableType.ORGANIZATION, stage);
         tabs.addTableTab("Sponsor", sponsorData, TableType.SPONSOR, stage);
         tabs.addTableTab("Competitions_Sponsored", compSponsorData, TableType.COMPETITIONS_SPONSORED, stage);
-        tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, stage);
+        tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, stage);*/
 
         vbox.getChildren().add(tabs.createContent());
+        vbox.getChildren().add(qbox.getQbox());
         vbox.prefWidthProperty().bind(stage.widthProperty().multiply(0.96));
         vbox.autosize();
         

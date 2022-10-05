@@ -1,4 +1,4 @@
-package deliverable4_ser322;
+package deliverable4_ser322.table;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

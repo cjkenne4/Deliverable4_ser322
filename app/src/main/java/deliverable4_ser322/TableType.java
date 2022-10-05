@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import deliverable4_ser322.table.*;
 
+@SuppressWarnings("unchecked")
 public enum TableType {
 
     ATHLETE(new ArrayList<>(Arrays.asList("athleteID", "name", "email","organizationID")), Athlete.class)
@@ -183,6 +185,166 @@ public enum TableType {
             setRowObject(nAthStat, values);
             return nAthStat;
         } 
+    },
+    COMPETITION_INFO(new ArrayList<>(Arrays.asList("name", "category", "placement", "winningStatistics")), CompetitionInfo.class)
+    {
+        @Override
+        public CompetitionInfo newDbObject(ResultSet rs) throws SQLException {
+            Object[] args = new Object[colNames().size()];
+            for(int i = 0; i < args.length; i++)
+                args[i] = rs.getObject(colNames().get(i));
+
+            return new CompetitionInfo(args);
+        }
+        @Override
+        public CompetitionInfo getRowObject(Object row) {
+            return (CompetitionInfo) row;
+        }
+        @Override
+        public void setRowObject(Object row, Object[] values) {
+            ((CompetitionInfo) row).setName(((String) values[0]));
+            ((CompetitionInfo) row).setCategory((String) values[1]);
+            ((CompetitionInfo) row).setPlacement(Integer.valueOf((String) values[2]));
+            ((CompetitionInfo) row).setWinningStatistics((String) values[3]);
+        }
+        @Override
+        public CompetitionInfo insertRow(Object[] values) {
+        	CompetitionInfo nCompInfo = new CompetitionInfo();
+            setRowObject(nCompInfo, values);
+            return nCompInfo;
+        } 
+    },
+    SPONSORS_SPONSORED(new ArrayList<>(Arrays.asList("sponsorID", "name", "competitionID", "prize", "datetime")), SponsorsSponsored.class)
+    {
+        @Override
+        public SponsorsSponsored newDbObject(ResultSet rs) throws SQLException {
+            Object[] args = new Object[colNames().size()];
+            for(int i = 0; i < args.length; i++)
+                args[i] = rs.getObject(colNames().get(i));
+
+            return new SponsorsSponsored(args);
+        }
+        @Override
+        public SponsorsSponsored getRowObject(Object row) {
+            return (SponsorsSponsored) row;
+        }
+        @Override
+        public void setRowObject(Object row, Object[] values) {
+            ((SponsorsSponsored) row).setSponsorID(Integer.valueOf((String) values[0]));
+        	((SponsorsSponsored) row).setName(((String) values[1]));
+            ((SponsorsSponsored) row).setCompetitionID(Integer.valueOf((String) values[2]));
+            ((SponsorsSponsored) row).setPrize((String) values[3]);
+            ((SponsorsSponsored) row).setDatetime(LocalDateTime.parse((String) values[4]));
+        }
+        @Override
+        public SponsorsSponsored insertRow(Object[] values) {
+        	SponsorsSponsored nSponSpon = new SponsorsSponsored();
+            setRowObject(nSponSpon, values);
+            return nSponSpon;
+        } 
+    },
+    CATEGORIES_WON(new ArrayList<>(Arrays.asList("name", "category")), CategoriesWon.class)
+    {
+        @Override
+        public CategoriesWon newDbObject(ResultSet rs) throws SQLException {
+            Object[] args = new Object[colNames().size()];
+            for(int i = 0; i < args.length; i++)
+                args[i] = rs.getObject(colNames().get(i));
+
+            return new CategoriesWon(args);
+        }
+        @Override
+        public CategoriesWon getRowObject(Object row) {
+            return (CategoriesWon) row;
+        }
+        @Override
+        public void setRowObject(Object row, Object[] values) {
+            ((CategoriesWon) row).setName(((String) values[0]));
+            ((CategoriesWon) row).setCategory(((String) values[1]));
+        }
+        @Override
+        public CategoriesWon insertRow(Object[] values) {
+        	CategoriesWon nCatWon = new CategoriesWon();
+            setRowObject(nCatWon, values);
+            return nCatWon;
+        } 
+    },
+    PLACEMENT_NUMBER(new ArrayList<>(Arrays.asList("name", "placement")), PlacementNumber.class)
+    {
+        @Override
+        public PlacementNumber newDbObject(ResultSet rs) throws SQLException {
+            Object[] args = new Object[colNames().size()];
+            for(int i = 0; i < args.length; i++)
+                args[i] = rs.getObject(colNames().get(i));
+
+            return new PlacementNumber(args);
+        }
+        @Override
+        public PlacementNumber getRowObject(Object row) {
+            return (PlacementNumber) row;
+        }
+        @Override
+        public void setRowObject(Object row, Object[] values) {
+            ((PlacementNumber) row).setName(((String) values[0]));
+            ((PlacementNumber) row).setPlacement(Integer.valueOf((String) values[1]));
+        }
+        @Override
+        public PlacementNumber insertRow(Object[] values) {
+        	PlacementNumber nPlaceNum = new PlacementNumber();
+            setRowObject(nPlaceNum, values);
+            return nPlaceNum;
+        } 
+    },
+    UNRANKED_ATHLETES(new ArrayList<>(Arrays.asList("name")), UnrankedAthletes.class)
+    {
+        @Override
+        public UnrankedAthletes newDbObject(ResultSet rs) throws SQLException {
+            Object[] args = new Object[colNames().size()];
+            for(int i = 0; i < args.length; i++)
+                args[i] = rs.getObject(colNames().get(i));
+
+            return new UnrankedAthletes(args);
+        }
+        @Override
+        public UnrankedAthletes getRowObject(Object row) {
+            return (UnrankedAthletes) row;
+        }
+        @Override
+        public void setRowObject(Object row, Object[] values) {
+            ((UnrankedAthletes) row).setName(((String) values[0]));
+        }
+        @Override
+        public UnrankedAthletes insertRow(Object[] values) {
+        	UnrankedAthletes nUnAth = new UnrankedAthletes();
+            setRowObject(nUnAth, values);
+            return nUnAth;
+        } 
+    },
+    RESULT_SET(RowObject.colNames, RowObject.class)
+    {
+        @Override
+        public RowObject newDbObject(ResultSet rs) throws SQLException {
+            RowObject rowObj = new RowObject(rs);
+            //setColNames(rowObj.getColumnNames());
+            return rowObj;
+        }
+
+        @Override
+        public RowObject getRowObject(Object row) {
+            return (RowObject) row;
+        }
+
+        @Override
+        public void setRowObject(Object row, Object[] values) {
+            ((RowObject) row).setValues(values);    
+        }
+        @Override
+        public RowObject insertRow(Object[] values) {
+            RowObject rowObj = new RowObject();
+            setRowObject(rowObj, values);
+            return rowObj;
+        }
+        
     };
 
     private ArrayList<String> colNames;
@@ -194,13 +356,18 @@ public enum TableType {
     }
 
     public ArrayList<String> colNames() {
-        return colNames;
+        if(objClass().equals(RowObject.class))
+            return RowObject.colNames;
+        else
+            return colNames;
     }
 
     public Class<?> objClass() {
         return objClass;
     }
-
+    public void setColNames(ArrayList<String> colNames){
+        this.colNames = colNames;
+    }
     public Method getMethod(String name) throws NoSuchMethodException, SecurityException{
         Method method = objClass().getMethod("get" + name.substring(0,1).toUpperCase() + name.substring(1));
         return method;
