@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class Queries {
 	// Shows Queries
 	static VBox vbox = new VBox(10);
-    
+
 	// Choice boxes of Queries
 	HBox qLists = new HBox(10);
 	ChoiceBox<String> c1 = new ChoiceBox<String>(FXCollections.observableArrayList(" "));
@@ -40,9 +40,9 @@ public class Queries {
 
 		vbox.getChildren().add(qLists);
 		vbox.getChildren().add(textFields);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.prefWidthProperty().bind(App.stage.widthProperty().multiply(0.96));
-        vbox.prefHeightProperty().bind(App.stage.widthProperty().multiply(0.96));
+		vbox.setPadding(new Insets(10, 0, 0, 10));
+		vbox.prefWidthProperty().bind(App.stage.widthProperty().multiply(0.96));
+		vbox.prefHeightProperty().bind(App.stage.widthProperty().multiply(0.96));
 		qLists.getChildren().add(c1);
 		qLists.getChildren().add(c2);
 
@@ -58,8 +58,9 @@ public class Queries {
 
 		// ************************** Lists **************************
 		String queries[] = { "Show All", "Competition Information", "List of Sponsors and Their Competitions",
-				"Athletes That Never Won A Podium", "Category Winners",
-				"Athlete Placement Count", "Top 5 Performers", "Top 3 Athletes", "Top 10 Athletes" }; // TODO INSERT and DELETE Queries
+				"Athletes That Never Won A Podium", "Category Winners", "Athlete Placement Count", "Top 5 Performers",
+				"Top 3 Athletes", "Top 10 Athletes", "Athletes Not Competed", "Delete Athletes Who Haven't Competed",
+				"Change Stats of Competition ID 4 to 6" };
 		c1 = new ChoiceBox<String>(FXCollections.observableArrayList(queries));
 		c1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue ov, Number value, Number new_value) {
@@ -159,9 +160,24 @@ public class Queries {
 				if (l1 == 7) {
 					emptyList();
 				}
-				
+
 				// Top 10 Athletes
 				if (l1 == 8) {
+					emptyList();
+				}
+
+				// Show athletes that haven't competed yet
+				if (l1 == 9) {
+					emptyList();
+				}
+
+				// Delete athletes that haven't competed yet
+				if (l1 == 10) {
+					emptyList();
+				}
+
+				// Change competition ID 4 to 6
+				if (l1 == 11) {
 					emptyList();
 				}
 			}
@@ -206,25 +222,24 @@ public class Queries {
 							e1.printStackTrace();
 						}
 					} else if (l2 == 4) {
-						ObservableList<Object> compSponsorData = null;
 						try {
-							compSponsorData = getAllFromTable("competitions_sponsored",
+							ObservableList<Object> compSponsorData = getAllFromTable("competitions_sponsored",
 									TableType.COMPETITIONS_SPONSORED);
+							App.tabs.addTableTab("Competitions_Sponsored", compSponsorData,
+									TableType.COMPETITIONS_SPONSORED, App.stage);
+							App.tabs.createContent().getSelectionModel().selectLast();
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
-						App.tabs.addTableTab("Competitions_Sponsored", compSponsorData,
-								TableType.COMPETITIONS_SPONSORED, App.stage);
-						App.tabs.createContent().getSelectionModel().selectLast();
+						
 					} else if (l2 == 5) {
-						ObservableList<Object> athStatData = null;
 						try {
-							athStatData = getAllFromTable("athlete_stats", TableType.ATHLETE_STATS);
+							ObservableList<Object> athStatData = getAllFromTable("athlete_stats", TableType.ATHLETE_STATS);
+							App.tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, App.stage);
+							App.tabs.createContent().getSelectionModel().selectLast();
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
-						App.tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, App.stage);
-						App.tabs.createContent().getSelectionModel().selectLast();
 					} else
 						System.out.println("Invalid");
 				}
@@ -241,7 +256,8 @@ public class Queries {
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					App.tabs.addTableTab("Competition_Info " + t1.getText(), competitionInfo, TableType.COMPETITION_INFO, App.stage);
+					App.tabs.addTableTab("Competition_Info " + t1.getText(), competitionInfo,
+							TableType.COMPETITION_INFO, App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
 
@@ -255,15 +271,14 @@ public class Queries {
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					App.tabs.addTableTab("Sponsors_Sponsored", sponsorsSponsored, TableType.SPONSORS_SPONSORED, App.stage);
+					App.tabs.addTableTab("Sponsors_Sponsored", sponsorsSponsored, TableType.SPONSORS_SPONSORED,
+							App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
-				
+
 				// action of athletes who have not placed top in a competition (1, 2, or 3)
 				else if (l1 == 3) {
-					String query = "SELECT A.name"
-							+ " FROM Athlete A"
-							+ " WHERE A.athleteID NOT IN ("
+					String query = "SELECT A.name" + " FROM Athlete A" + " WHERE A.athleteID NOT IN ("
 							+ "	SELECT A2.athleteID"
 							+ "	FROM Athlete A2 JOIN Athlete_Stats AS1 ON A2.athleteID = AS1.athleteID"
 							+ "	WHERE AS1.placement > 0);";
@@ -276,7 +291,7 @@ public class Queries {
 					App.tabs.addTableTab("Unranked_Athletes", unrankedAthletes, TableType.UNRANKED_ATHLETES, App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
-				
+
 				// action of athletes and what competition categories they won
 				else if (l1 == 4) {
 					String query = "Select A.name, C.category"
@@ -291,109 +306,130 @@ public class Queries {
 					App.tabs.addTableTab("Categories_Won", categoriesWon, TableType.CATEGORIES_WON, App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
-				
+
 				// action of athletes who won a specific place and how many times they won it
 				else if (l1 == 5) {
 					String query = "Select A.name, COUNT(AS1.competitionID) AS count"
 							+ " FROM Athlete A JOIN Athlete_Stats AS1 ON A.athleteID = AS1.athleteID"
-							+ " WHERE AS1.placement = " + t1.getText()
-							+ " GROUP BY A.name;";
+							+ " WHERE AS1.placement = " + t1.getText() + " GROUP BY A.name;";
 					ObservableList<Object> placementNumber = null;
 					try {
-						placementNumber = runQuery("Placement_Number", TableType.RESULT_SET, query);
+						placementNumber = runQuery("Placement_Count", TableType.RESULT_SET, query);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					App.tabs.addTableTab("Placement_Number", placementNumber, TableType.RESULT_SET, App.stage);
+					App.tabs.addTableTab("Placement_Count", placementNumber, TableType.RESULT_SET, App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
-				
+
 				// action for showing top 5 performers
 				else if (l1 == 6) {
 					if (l2 == 0) {
-						String query = "SELECT *"
-								+ " FROM Athlete_Stats"
-								+ " ORDER BY placement ASC LIMIT 5";
+						String query = "SELECT *" + " FROM Athlete_Stats" + " ORDER BY placement ASC LIMIT 5";
 						ObservableList<Object> topAthletes = null;
 						try {
-							topAthletes = runQuery("Athlete_Stats", TableType.ATHLETE_STATS, query);
+							topAthletes = runQuery("Top_5_Performers_Athletes", TableType.ATHLETE_STATS, query);
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
-						App.tabs.addTableTab("Top_5_Athletes", topAthletes, TableType.ATHLETE_STATS, App.stage);
+						App.tabs.addTableTab("Top_5_Performers_Athletes", topAthletes, TableType.ATHLETE_STATS,
+								App.stage);
 						App.tabs.createContent().getSelectionModel().selectLast();
 					} else if (l2 == 1) {
-						String query = "SELECT *"
-								+ " FROM Competitions_Sponsored"
-								+ " GROUP BY sponsorID"
-								+ " ORDER BY count(sponsorID) DESC LIMIT 5;";
+						String query = "SELECT Sponsor.name, Count(Competitions_Sponsored.sponsorID) AS count"
+								+ " FROM Competitions_Sponsored" + " JOIN Sponsor"
+								+ " ON Sponsor.sponsorID = Competitions_Sponsored.sponsorID"
+								+ " GROUP BY Competitions_Sponsored.sponsorID"
+								+ " ORDER BY Count(Competitions_Sponsored.sponsorID) DESC LIMIT 5;";
 						ObservableList<Object> topSponsors = null;
 						try {
-							topSponsors = runQuery("Competitions_Sponsored", TableType.COMPETITIONS_SPONSORED, query);
+							topSponsors = runQuery("Top_5_Performers_Sponsors", TableType.RESULT_SET, query);
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
-						App.tabs.addTableTab("Top_5_Sponsors", topSponsors, TableType.COMPETITIONS_SPONSORED, App.stage);
+						App.tabs.addTableTab("Top_5_Performers_Sponsors", topSponsors, TableType.RESULT_SET, App.stage);
 						App.tabs.createContent().getSelectionModel().selectLast();
 					}
 				}
-				
+
 				// action for top 3 athletes
 				else if (l1 == 7) {
-					String query = "SELECT Athlete.name, count(Athlete.athleteID) AS count"
-							+ " FROM Athlete"
-							+ " JOIN Athlete_Stats"
-							+ " ON Athlete.athleteID = Athlete_Stats.athleteID"
-							+ " WHERE Athlete_Stats.placement = 1"
-							+ " GROUP BY Athlete.athleteID\r\n"
-							+ " ORDER BY count(Athlete.athleteID) DESC"
-							+ " LIMIT 3;";
+					String query = "SELECT Athlete.name, count(Athlete.athleteID) AS count" + " FROM Athlete"
+							+ " JOIN Athlete_Stats" + " ON Athlete.athleteID = Athlete_Stats.athleteID"
+							+ " WHERE Athlete_Stats.placement = 1" + " GROUP BY Athlete.athleteID\r\n"
+							+ " ORDER BY count(Athlete.athleteID) DESC" + " LIMIT 3;";
 					ObservableList<Object> topSponsors = null;
 					try {
-						topSponsors = runQuery("Competitions_Sponsored", TableType.RESULT_SET, query);
+						topSponsors = runQuery("Top_3", TableType.RESULT_SET, query);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					App.tabs.addTableTab("Top_5_Sponsors", topSponsors, TableType.RESULT_SET, App.stage);
+					App.tabs.addTableTab("Top_3", topSponsors, TableType.RESULT_SET, App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
-				
+
 				// action for top 10 athletes
 				else if (l1 == 8) {
 					String query = "SELECT Athlete.name, Athlete_Stats.placement, Athlete_Stats.winningStatistics"
-							+ " FROM Athlete_Stats"
-							+ " JOIN Athlete"
-							+ " ON Athlete.athleteID = Athlete_Stats.athleteID"
-							+ " ORDER BY placement ASC"
+							+ " FROM Athlete_Stats" + " JOIN Athlete"
+							+ " ON Athlete.athleteID = Athlete_Stats.athleteID" + " ORDER BY placement ASC"
 							+ " LIMIT 10;";
 					ObservableList<Object> topSponsors = null;
 					try {
-						topSponsors = runQuery("Competitions_Sponsored", TableType.RESULT_SET, query);
+						topSponsors = runQuery("Top_10", TableType.RESULT_SET, query);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					App.tabs.addTableTab("Top_5_Sponsors", topSponsors, TableType.RESULT_SET, App.stage);
+					App.tabs.addTableTab("Top_10", topSponsors, TableType.RESULT_SET, App.stage);
 					App.tabs.createContent().getSelectionModel().selectLast();
 				}
+
+				// Athletes that haven't competed
 				else if (l1 == 9) {
-                    String select = "SELECT * FROM Athlete WHERE athleteID NOT IN "
-                                  + "(SELECT athleteID FROM Athlete_Stats);";
-                    String delete = "DELETE"
-                            + " FROM Athlete"
-                            + " WHERE athleteID NOT IN (SELECT athleteID"
-                            + "        FROM Athlete_Stats);";
-                    
-                    ObservableList<Object> athleteData;
-                    try {
-                        athleteData = runQuery("athlete", TableType.ATHLETE, select);
-                        App.tabs.addTableTab("Athlete", athleteData, TableType.ATHLETE, App.stage);
-                        App.tabs.createContent().getSelectionModel().selectLast();
-                        Crud.deleteAll(delete);
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
+					String select = "SELECT * FROM Athlete WHERE athleteID NOT IN "
+							+ "(SELECT athleteID FROM Athlete_Stats);";
+
+					ObservableList<Object> athleteData;
+					try {
+						athleteData = runQuery("Athletes_No_Comps", TableType.ATHLETE, select);
+						App.tabs.addTableTab("Athletes_No_Comps", athleteData, TableType.ATHLETE, App.stage);
+						App.tabs.createContent().getSelectionModel().selectLast();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+
+				// Delete athletes that haven't competed
+				else if (l1 == 10) {
+					String query = "DELETE" 
+							+ " FROM Athlete" 
+							+ " WHERE athleteID NOT IN (SELECT athleteID"
+							+ "        FROM Athlete_Stats);";
+					try {
+						Crud.executeQuery(query);
+						ObservableList<Object> athleteData = getAllFromTable("athlete", TableType.ATHLETE);
+						App.tabs.addTableTab("Athlete", athleteData, TableType.ATHLETE, App.stage);
+						App.tabs.createContent().getSelectionModel().selectLast();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				// Update stats of competition id 4 to 6
+				else if (l1 == 11) {
+					String query = "UPDATE Athlete_Stats" 
+							+ " SET competitionID = 6"
+							+ " WHERE competitionID = 4";
+					try {
+						Crud.executeQuery(query);
+						ObservableList<Object> athStatData = getAllFromTable("athlete_stats", TableType.ATHLETE_STATS);
+						App.tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, App.stage);
+						App.tabs.createContent().getSelectionModel().selectLast();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 		};
 
 		run.setOnAction(event);

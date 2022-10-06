@@ -44,7 +44,7 @@ public class Crud {
         pstmt.executeUpdate();
         close();
     }
-    public static void deleteAll(String query) throws SQLException
+    public static void executeQuery(String query) throws SQLException
     {
         conn = getConnection();
         pstmt = conn.prepareStatement(query);

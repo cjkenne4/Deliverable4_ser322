@@ -3,11 +3,9 @@ package deliverable4_ser322;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -16,9 +14,9 @@ import javafx.stage.Stage;
 public class App extends Application
 {
     VBox vbox = new VBox();
-    static TabView tabs = new TabView();
+    static TabView tabs;
     static Stage stage;
-    static Queries qbox = new Queries();
+    static Queries qbox;
 
     static{ 
         testDatabaseConnection();
@@ -28,6 +26,8 @@ public class App extends Application
     public void start(Stage stage) throws SQLException
     {
         App.stage = stage;
+        tabs = new TabView();
+        qbox = new Queries();
         Scene scene = new Scene(new Group());
         scene.getStylesheets().add("ContextMenu.css");
 
@@ -36,19 +36,6 @@ public class App extends Application
         stage.setHeight(750);
 
         qbox.addQueries();
-       
-        /*ObservableList<Object> athleteData = GenericRM.getAllFromTable("athlete", TableType.ATHLETE);
-        ObservableList<Object> compData = GenericRM.getAllFromTable("competition", TableType.COMPETITION);
-        ObservableList<Object> orgData = GenericRM.getAllFromTable("organization", TableType.ORGANIZATION);
-        ObservableList<Object> sponsorData = GenericRM.getAllFromTable("sponsor", TableType.SPONSOR);
-        ObservableList<Object> compSponsorData = GenericRM.getAllFromTable("competitions_sponsored", TableType.COMPETITIONS_SPONSORED);
-        ObservableList<Object> athStatData = GenericRM.getAllFromTable("athlete_stats", TableType.ATHLETE_STATS);
-        tabs.addTableTab("Athlete", athleteData, TableType.ATHLETE, stage);
-        tabs.addTableTab("Competition", compData, TableType.COMPETITION, stage);
-        tabs.addTableTab("Organization", orgData, TableType.ORGANIZATION, stage);
-        tabs.addTableTab("Sponsor", sponsorData, TableType.SPONSOR, stage);
-        tabs.addTableTab("Competitions_Sponsored", compSponsorData, TableType.COMPETITIONS_SPONSORED, stage);
-        tabs.addTableTab("Athlete_Stats", athStatData, TableType.ATHLETE_STATS, stage);*/
 
         vbox.getChildren().add(tabs.createContent());
         vbox.getChildren().add(qbox.getQbox());
