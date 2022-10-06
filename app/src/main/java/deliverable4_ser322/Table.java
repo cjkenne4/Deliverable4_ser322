@@ -25,11 +25,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
+/**
+ * Create a generic TableView
+ */
 public class Table<T> extends TableView {
 
     private TableView<T> table = new TableView<>();
     private ObservableList<T> data;
-
+    /**
+     * Creates a new TableView with the given data, table name and table type.
+     * @param data
+     * @param tableName
+     * @param vbox
+     * @param tableType
+     */
     public Table(ObservableList<T> data, String tableName, VBox vbox, TableType tableType){
 
         this.data = data;
@@ -56,7 +65,13 @@ public class Table<T> extends TableView {
         vbox.setPadding(new Insets(10, 0, 0, 10));
         vbox.getChildren().addAll(label, table, hBox);
     }
-
+    /**
+     * Creates a new search bar for the specified table type
+     * @param textField
+     * @param choiceBox
+     * @param fl
+     * @param tType
+     */
     private void createSearchBar(TextField textField, ChoiceBox<String> choiceBox, FilteredList<T> fl, TableType tType){
 
         choiceBox.getItems().addAll(tType.colNames());
@@ -90,14 +105,26 @@ public class Table<T> extends TableView {
             }
         });
     }
-
+    /**
+     * Adds columns to the table with the specified table type.
+     * @param tableView
+     * @param tType
+     */
     private void addColumns(TableView<T> tableView, TableType tType){
 
         for(String str: tType.colNames()){
             tableView.getColumns().add(setColumn(str, str, 100));
         }
     }
-
+    /**
+     * Sets the column name and value factory.
+     * colValue must match a property name in 
+     * the java class for the table type.
+     * @param colName
+     * @param colValue
+     * @param minWidth
+     * @return
+     */
     private TableColumn<T, String> setColumn(String colName, String colValue, int minWidth){
 
         TableColumn<T, String> tableColumn = new TableColumn<>(colName);
@@ -106,7 +133,13 @@ public class Table<T> extends TableView {
             
         return tableColumn;
     } 
-
+    /**
+     * Creates a context menu with options to
+     * update, delete and insert a row into
+     * the database 
+     * @param table
+     * @param tType
+     */
     public void createContextMenu(TableView<T> table, TableType tType){
         table.setRowFactory(new Callback<TableView<T>, TableRow<T>>() 
         {

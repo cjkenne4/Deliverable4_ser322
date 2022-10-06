@@ -12,6 +12,9 @@ import javafx.scene.layout.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Create custom queries that can be executed with ChoiceBox and TextField values.
+ */
 @SuppressWarnings("rawtypes")
 public class Queries {
 	// Shows Queries

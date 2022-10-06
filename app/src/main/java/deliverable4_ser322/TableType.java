@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import deliverable4_ser322.table.*;
-
+/**
+ * Enum for mapping database tables to a Table of the specified TableType class
+ */
 @SuppressWarnings("unchecked")
 public enum TableType {
-
+    
     ATHLETE(new ArrayList<>(Arrays.asList("athleteID", "name", "email","organizationID")), Athlete.class)
     {
         @Override
@@ -320,6 +322,11 @@ public enum TableType {
             return nUnAth;
         } 
     },
+    /**
+     * TableType for displaying join queries in the TableView.
+     * colNames is updated during runtime using ResultSetMetaData
+     * @see RowObject
+     */
     RESULT_SET(RowObject.colNames, RowObject.class)
     {
         @Override
@@ -349,7 +356,13 @@ public enum TableType {
 
     private ArrayList<String> colNames;
     private Class<?> objClass;
-
+    /**
+     * TableType enums have a hardcoded arraylist of column names
+     * and a Class<?> object for the corresponding java class.
+     * 
+     * @param colNames
+     * @param objClass
+     */
     TableType(ArrayList<String> colNames, Class<?> objClass) {
         this.colNames = colNames;
         this.objClass = objClass;
@@ -368,10 +381,22 @@ public enum TableType {
     public void setColNames(ArrayList<String> colNames){
         this.colNames = colNames;
     }
+    /**
+     * Gets the getter method for the corresponding TableType java class and attribute name.
+     * @param name
+     * @return
+     * @throws NoSuchMethodException
+     * @throws SecurityException
+     */
     public Method getMethod(String name) throws NoSuchMethodException, SecurityException{
         Method method = objClass().getMethod("get" + name.substring(0,1).toUpperCase() + name.substring(1));
         return method;
     }
+    /**
+     * Invokes the getter methods for TableType
+     * @param o
+     * @return
+     */
     public Object[] getValues(Object o){
         Object[] values = new Object[colNames().size()];
         for(int i = 0; i < colNames().size(); i++){
@@ -384,19 +409,46 @@ public enum TableType {
         }
         return values;
     }
+    //not used
     public Object instantiate(ResultSet rs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, SQLException {
         Object[] args = getArgs(rs);
         Class<?> clazz = objClass();
         return clazz.getDeclaredConstructor().newInstance(args);
     }
+    //not used
     public Object[] getArgs(ResultSet rs) throws SQLException{
         Object[] args = new Object[colNames().size()];
         for(int i = 0; i < args.length; i++)
             args[i] = rs.getObject(colNames().get(i));
         return args;
     }
+    /**
+     * Creates a new object for the corresponding table class
+     * using a ResultSet to get row values.
+     * @param <T>
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
     public abstract <T> T newDbObject(ResultSet rs) throws SQLException;
+    /**
+     * Casts a TableView row to its corresponding class.
+     * @param <T>
+     * @param row
+     * @return
+     */
     public abstract <T> T getRowObject(Object row);
+    /**
+     * Sets a rows value after a table is updated in the database.
+     * @param row
+     * @param values
+     */
     public abstract void setRowObject(Object row, Object[] values);
+    /**
+     * Adds a new row to the TableView after a inserting a new row in the database.
+     * @param <T>
+     * @param values
+     * @return
+     */
     public abstract <T> T insertRow(Object[] values);
 }

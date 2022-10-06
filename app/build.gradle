@@ -1,8 +1,12 @@
 
 plugins {
     id 'application'
+    id 'java'
     id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'org.springframework.boot' version '2.7.3'
+
+    //plugin that can be used to add DB JDBC drivers to your gradle runtime dependencies
+    //https://github.com/rkennel/withDb
     id "rkennel.withdb" version "1.0.6"
 }
 apply plugin: 'io.spring.dependency-management'

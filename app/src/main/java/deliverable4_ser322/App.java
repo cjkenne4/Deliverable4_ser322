@@ -11,6 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/** 
+ * Application main class for launching the application
+*/
 public class App extends Application
 {
     VBox vbox = new VBox();
@@ -46,7 +49,7 @@ public class App extends Application
         stage.setScene(scene);
         stage.show();
     }
-
+    
     private static void testDatabaseConnection(){
 
         String url = "jdbc:mysql://ser322.mysql.database.azure.com:3306/league?useSSL=true";

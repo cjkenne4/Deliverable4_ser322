@@ -12,12 +12,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 
+/**
+ * Create and display custom Dialog for update, delete and insert
+ */
 public class CrudDialog {
 
     static Alert alert;
     static Dialog<Result> updateDialog;
     static Dialog<Result> insertDialog;
 
+    /**
+     * Displays an alert for confirming a row deletion.
+     * The row is deleted from the database using the relevant 
+     * query and removed from the ObservableList to update the
+     * javaFX table.
+     * @param selectedRow
+     * @param tType
+     * @param data
+     * @param rowValue
+     * @throws SQLException
+     * @see Crud#delete
+     */
     public static void displayDelete(Object selectedRow, TableType tType, ObservableList data, Object rowValue) throws SQLException{
         alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirm Delete");
@@ -37,6 +52,14 @@ public class CrudDialog {
             alert.close();
         }
     }
+    /**
+     * Displays an update dialog box.
+     * textFields are pre-filled with the
+     * current values.
+     * @param tType
+     * @param selectedRow
+     * @see Crud#update
+     */
     public static void displayUpdate(TableType tType, Object selectedRow)
     {
         updateDialog = new Dialog<Result>();
@@ -80,6 +103,12 @@ public class CrudDialog {
         });
 
     }
+    /**
+     * Displays a dialog box for inserting a new row
+     * @param tType
+     * @param data
+     * @see Crud#insert
+     */
     public static void displayInsert(TableType tType, ObservableList data)
     {
         insertDialog = new Dialog<Result>();
@@ -118,10 +147,15 @@ public class CrudDialog {
             }
         });
     }
-
+    
     private static class Result{
         Object[] values;
 
+        /**
+         * Nested class for holding the textfield values
+         * from update and insert dialog.
+         * @param vals
+         */
         Result(Object...vals){
             values = new Object[vals.length];
             for(int i = 0; i < values.length; i++){
